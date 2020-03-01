@@ -1,0 +1,530 @@
+Katowice Studia podyplomowe TESTER - appium - aplikacje
+
+SCENARIUSZ ZAJĘĆ:
+https://drive.google.com/file/d/1ziYq162q_Th_BfSiBlLTG0mAnWJgfwDG/view
+
+FOLDER TOOLS do ANDROID/SDK/:
+https://drive.google.com/drive/folders/1t5ggJ0PajuBKfE2kfH0WFO48UeJIMyja?usp=sharing
+KONTROLA:
+appium-doctor --android
+
+
+http://appium.io/docs/en/writing-running-appium/caps/
+https://adbshell.com/commands/adb-shell-pm-list-packages
+
+http://appium.io/docs/en/commands/session/back/
+https://developer.android.com/reference/android/view/KeyEvent.html
+
+
+(1)JAVA
+java -version
+
+
+tester@tester-m:~$ sudo apt-get install default-jre
+tester@tester-m:~$ sudo apt-get install default-jdk
+tester@tester-m:~$
+
+tester@tester-m:~$ echo $JAVA_HOME
+
+tester@tester-m:~$ export PATH=${PATH}:${JAVA_HOME}/bin
+export PATH=${PATH}:${JAVA_HOME}/bin
+tester@tester-m:~$ echo $PATH
+
+java -version
+
+
+
+
+w pliku bashrc:
+# Appium - config
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=${PATH}:${JAVA_HOME}/bin
+
+export ANDROID_HOME=/home/tester/Android/Sdk
+export PATH=${PATH}:/home/tester/Android/Sdk/build-tools
+export PATH=${PATH}:/home/tester/Android/Sdk/tools
+export PATH=${PATH}:/home/tester/Android/Sdk/platform-tools
+
+
+(2) ANDROID STUDIO + ANDROID SDK
+pobieranie https://developer.android.com/studio
+instalacja https://developer.android.com/studio/install#linux
+
+Instalacja brakujących bibliotek dla systemu Linux Ubuntu:
+
+export ANDROID_HOME=/home/tester/Android/Sdk
+
+adb devices
+com.example.android.contactmanager:id/
+
+(3) NODE + NPM
+https://nodejs.org/en/
+
+node 12.16
+
+sciezka /usr/local/bin/
+
+KONTROLA:
+node -v
+which node  # wynik oczekiwany
+
+ścieżka - : /usr/local/bin/node
+npm -v
+
+
+
+https://askubuntu.com/questions/1152570/npm-cant-find-module-semver-error-in-ubuntu-19-04
+
+sudo cp -r /home/tester/Desktop/node-v12.16.1-linux-x64/lib/node_modules/ /usr/local/lib
+
+
+
+(4) Appium - pobieranie:
+appium dekstop: https://github.com/appium/appium-desktop/releases
+https://github.com/appium/appium-desktop/releases/download/v1.15.1/Appium-linux-1.15.1.AppImage
+
+
+API LEVELS https://developer.android.com/studio/releases/platforms
+
+(5) APPIUM - cd
+https://medium.com/@syamsasi/setting-up-appium-on-windows-and-ubuntu-ea9a73ab989
+
+
+
+
+od KOLEŻANKI - ok maszyna:
+\\S13-S04\dobra_virtualka_bez_szyfru_tester
+
+adres od KONRADA:
+\\10.1.1.82\Kopia_dobra_wirtualka_tester
+\\s13-s22\Kopia_dobra_wirtualka_tester
+
+C:\Users\Student\VirtualBox VMs\ubuntutester2019
+
+- INSTALACJA APPIUM CIĄG DALSZY
+sudo npm install -g appium
+sudo npm install -g appium-doctor
+npm install -g appium --unsafe-perm=true --allow-root
+
+KONTROLA:
+appium-doctor --android
+nr wersji: appium-doctor --version
+
+
+(5) PYTHON + PYCHARM/IDE
+##### Fix pip3 #####  sudo apt-get remove python3-pip; sudo apt-get install python3-pip
+python3 install pi
+pip3 install Appium-Python-Client
+
+wejdz do konsoli pythona:
+python3
+import selenium
+help (selenium)
+
+exit()
+
+Konfiguracja interpreterów pythona w pycharm
+
+
+
+PIERWSZE TESTY w PY:
+
+# -*- coding: utf-8" -*
+
+
+import os
+import unittest
+from appium import webdriver
+from time import sleep
+
+PATH = lambda p: os.path.abspath(
+    os.path.join(os.path.dirname(__file__),p)
+)
+
+
+class TestowanieAplikacji(unittest.TestCase):
+    def setUp(self):
+        desired_caps = {}
+        desired_caps['platformName'] = 'Android'
+        desired_caps['platfomVersion'] = '7.0'
+        desired_caps['deviceName'] = 'Gigaset GS170'
+        desired_caps['app'] = PATH('ApiDemos-debug.apk')
+        desired_caps['appPackage'] = 'io.appium.android.apis'
+        desired_caps['appActivity'] = 'io.appium.android.apis.ApiDemos'
+
+
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub',desired_caps)
+
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_is_app1_installed(self):
+        self.assertTrue(self.driver.is_app_installed('io.appium.android.apis'))
+
+    def test_is_app2_installed(self):
+        self.assertTrue(self.driver.is_app_installed('com.example.android.contactmanager'))
+
+
+
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestowanieAplikacji)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+
+
+
+
+
+
+AppPackage oraz AppActivity aplikacji odczytane zostanie w konsoli z wykorzystaniem:
+adb shell dumpsys window windows | grep -E 'mCurrentFocus'
+
+
+
+
+
+ TEST 2 - contact form
+
+
+# -*- coding: utf-8" -*
+
+import os
+import unittest
+from appium import webdriver
+from time import sleep
+
+PATH = lambda p: os.path.abspath(
+    os.path.join(os.path.dirname(__file__),p)
+)
+
+
+class TestowanieAplikacji(unittest.TestCase):
+    def setUp(self):
+        desired_caps = {}
+        desired_caps['platformName'] = 'Android'
+        desired_caps['platfomVersion'] = '7.0'
+        desired_caps['deviceName'] = 'Gigaset GS170'
+        desired_caps['app'] = PATH('ContactManager.apk')
+        desired_caps['appPackage'] = 'com.example.android.contactmanager'
+        desired_caps['appActivity'] = 'com.example.android.contactmanager.ContactManager'
+        # nowe ustawienia dla klawiatury
+        desired_caps['unicodeKeyboard'] = True
+        desired_caps['resetKeyboard'] = True
+
+
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub',desired_caps)
+        self.driver.implicitly_wait(10)
+
+
+    def tearDown(self):
+        self.driver.quit()
+
+
+    # funcje testujace:
+    def test_is_app_contact_manager_installed(self):
+        self.assertTrue(self.driver.is_app_installed('com.example.android.contactmanager'))
+
+    def test_contact_form(self):
+        self.driver.find_element_by_accessibility_id('Add Contact').click()
+        sleep(2)
+        textfields = self.driver.find_elements_by_class_name("android.widget.EditText")
+
+        textfields[0].send_keys("Tomasz")
+        textfields[1].send_keys("555666999")
+        textfields[2].send_keys("tomasz@wsb.pl")
+        sleep(1)
+
+        self.assertEqual(textfields[0].text, "Tomasz")
+        self.assertEqual(textfields[1].text, "555666999")
+        self.assertEqual(textfields[2].text, "tomasz@wsb.pl")
+
+        print("Liczba elementow znalezionych elementow o takiej klasie:")
+        print(textfields.__len__().__str__())
+
+       # self.assertEqual(textfields.__len__().__str__(), 3)
+        #Dydaktyczne printy
+        print("Porownanie co jest w wyszukanych elementach")
+        print(textfields[0])
+        print(textfields[0].text)
+
+        self.driver.find_element_by_class_name("android.widget.Button").click()
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestowanieAplikacji)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+# TEST 3 - WIFI CHECKBOX
+
+# WZOR XPATH //tagName[@atributte="value"]
+
+przyklad: //PodstawclassName[@text="Graphics"].click()
+self.driver.find_element_by_xpath('//android.widget.EditText[@text = "Name"]').send_keys("Janek2")
+
+
+# -*- coding: utf-8" -*
+
+import os
+import unittest
+from appium import webdriver
+from time import sleep
+
+PATH = lambda p: os.path.abspath(
+    os.path.join(os.path.dirname(__file__),p)
+)
+
+class TestowanieAplikacji(unittest.TestCase):
+    def setUp(self):
+        desired_caps = {}
+        desired_caps['platformName'] = 'Android'
+        desired_caps['platfomVersion'] = '7.0'
+        desired_caps['deviceName'] = 'Gigaset GS170'
+        desired_caps['app'] = PATH('ApiDemos-debug.apk')
+        desired_caps['appPackage'] = 'io.appium.android.apis'
+        desired_caps['appActivity'] = 'io.appium.android.apis.ApiDemos'
+
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub',desired_caps)
+        self.driver.implicitly_wait(10) # co to robi?
+
+
+    def tearDown(self):
+        self.driver.quit()
+
+
+    def test_wifi_checkbox(self):
+        el = self.driver.find_element_by_accessibility_id('Preference')
+        el.click()
+        el = self.driver.find_element_by_accessibility_id('3. Preference dependencies')
+        el.click()
+        # print(el)
+        self.assertIsNotNone(el)
+        #
+        # #Jesli chcemy zaznaczyc wszystkie checkboxy
+        #
+        # elements= self.driver.find_elements_by_android_uiautomator("new UiSelector().checkable(true)")
+        # amount_of_elements=len(elements)
+        #
+        # for elem in elements:
+        #     elem.click()
+
+        # Od kroku 3
+				self.driver.find_element_by_xpath('//android.widget.TextView[@text="WiFi settings"]').click()
+
+        self.driver.find_element_by_class_name("android.widget.EditText").send_keys("12334")
+        elements= self.driver.find_elements_by_android_uiautomator("new UiSelector().checkable(true)")
+        amount_of_elements=len(elements)
+        print("Checkboxow jest:"+amount_of_elements.__str__()) # pomocniczo
+
+        if amount_of_elements>=1:
+            print("Jest conajmniej jeden checkbox")
+
+            self.driver.find_element_by_id('android:id/checkbox').click()
+
+            # jak kliknac na drugi index
+            self.driver.find_elements_by_xpath("//android.widget.RelativeLayout")[1].click()
+
+            # alternatywne rozwiazanie dla 45 linii ale gorzej
+            #self.driver.find_element_by_xpath('//android.widget.TextView[@text="WiFi settings]').click()
+
+            self.driver.find_element_by_class_name("android.widget.EditText").send_keys("12334")
+
+            self.driver.find_elements_by_class_name("android.widget.Button")[1].click()
+
+            self.driver.keyevent(4) # dla przycisku androidowego BACK
+            self.driver.back()
+
+
+
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestowanieAplikacji)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+
+
+
+
+
+
+  # Od kroku 3 - alternatywne rozwiazenie
+
+        is_checked_bool = False
+        is_checked_value = self.driver.find_element_by_class_name("android.widget.CheckBox").get_attribute("checked")
+
+        if is_checked_value == "false":
+            print("Checkbox nie jest zaznaczony")
+            self.driver.find_element_by_class_name("android.widget.CheckBox").click()
+            is_checked_bool = True
+
+        self.assertTrue(is_checked_bool)
+        sleep(3)
+
+        self.driver.back()
+        self.driver.find_element_by_accessibility_id('3. Preference dependencies').click()
+
+        # czy checkbox jest zaznaczony ? jesli tak to nie zaznaczaj i daj wynik testu; OK
+        is_checked_value = self.driver.find_element_by_class_name("android.widget.CheckBox").get_attribute("checked")
+
+        if is_checked_value == 'true':
+            print("Checkbox jest zaznaczony")
+            is_checked_bool = True
+
+        self.assertTrue("Checkbox jest zaznaczony", is_checked_bool)
+
+
+
+
+
+
+TEST 4 - powiadomienia
+
+
+# -*- coding: utf-8" -*
+
+import os
+import unittest
+from appium import webdriver
+from time import sleep
+
+PATH = lambda p: os.path.abspath(
+    os.path.join(os.path.dirname(__file__),p)
+)
+
+
+class TestowanieAplikacji(unittest.TestCase):
+    def setUp(self):
+        desired_caps = {}
+        desired_caps['platformName'] = 'Android'
+        desired_caps['platfomVersion'] = '7.0'
+        desired_caps['deviceName'] = 'Gigaset GS170'
+        desired_caps['app'] = PATH('ApiDemos-debug.apk')
+        desired_caps['appPackage'] = 'io.appium.android.apis'
+        desired_caps['appActivity'] = 'io.appium.android.apis.ApiDemos'
+
+
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub',desired_caps)
+        self.driver.implicitly_wait(10)
+
+
+    def tearDown(self):
+        self.driver.quit()
+
+
+# funcje testujace:
+
+    def test_nofifications(self):
+        self.driver.open_notifications()
+        sleep(3)
+        elements = self.driver.find_elements_by_class_name("android.widget.TextView")
+
+        print("Liczba elementow wynosi:"+elements.__len__().__str__())
+
+        title = False
+        body = False
+
+        for el in elements:
+            print("Element o tresci: "+el.text)
+            if el.text == "USB debugging connected":
+                title = True
+            elif el.text == "Tap to disable USB debugging.":
+                body = True
+
+        self.assertTrue(title)
+        self.assertTrue(body)
+
+        self.driver.back()
+
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestowanieAplikacji)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+
+
+# Rozwiazanie kol. Patrycji z grupy !
+ # czesc z funkcjami testujacymi
+    def test_is_notification(self):
+        self.driver.open_notifications()
+        self.driver.implicitly_wait(3)
+        elements = self.driver.find_elements_by_id('android:id/notification_main_column')
+        is_body_and_title_found = False
+        for el in elements:
+            title = el.find_element_by_id('android:id/title').text
+            body = el.find_element_by_id('android:id/text').text
+            print(title)
+            print(body)
+            if title == "USB debugging connected" and body == "Tap to disable USB debugging.":
+                is_body_and_title_found = True
+
+        self.assertTrue(is_body_and_title_found)
+
+
+
+
+# TEST5 - Akcje dotykowe
+
+http://appium.io/docs/en/writing-running-appium/touch-actions/
+https://discuss.appium.io/t/how-to-use-touchaction-for-press-move-hold-release-gesture/21000
+
+# zadanie dla chetnych - zmiana godziny i minut w zakladce: Views/Date Widgets/Inline
+
+
+# -*- coding: utf-8" -*
+
+import os
+import unittest
+from appium import webdriver
+from appium.webdriver.common.touch_action import TouchAction
+from time import sleep
+
+PATH = lambda p: os.path.abspath(
+    os.path.join(os.path.dirname(__file__),p)
+)
+
+
+class TestowanieAplikacji(unittest.TestCase):
+    def setUp(self):
+        desired_caps = {}
+        desired_caps['platformName'] = 'Android'
+        desired_caps['platfomVersion'] = '7.0'
+        desired_caps['deviceName'] = 'Gigaset GS170'
+        desired_caps['app'] = PATH('ApiDemos-debug.apk')
+        desired_caps['appPackage'] = 'io.appium.android.apis'
+        desired_caps['appActivity'] = 'io.appium.android.apis.ApiDemos'
+
+
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub',desired_caps)
+        self.driver.implicitly_wait(10)
+
+
+    def tearDown(self):
+        self.driver.quit()
+
+
+# funcje testujace:
+
+    def test_gestures(self):
+        self.assertTrue(self.driver.is_app_installed('io.appium.android.apis'))
+
+        # Kliknij Views za pomoca tap() - tu zamiast click()
+        el=self.driver.find_element_by_accessibility_id('Views')
+        action = TouchAction(self.driver)
+        action.tap(el).perform()
+
+        self.driver.find_element_by_accessibility_id('Expandable Lists').click()
+        self.driver.find_element_by_accessibility_id('1. Custom Adapter').click()
+        el1= self.driver.find_element_by_xpath("//android.widget.TextView[@text='People Names']")
+        el1.click()
+
+        action.long_press(el1).release().perform()
+
+        self.driver.find_element_by_xpath("//android.widget.TextView[@text='Sample Action']").click()
+        sleep(3)
+
+
+
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestowanieAplikacji)
+    unittest.TextTestRunner(verbosity=2).run(suite)

@@ -1,0 +1,182 @@
+Katowice Studia podyplomowe TESTER - appium - aplikacje
+https://drive.google.com/file/d/1ziYq162q_Th_BfSiBlLTG0mAnWJgfwDG/view
+
+http://appium.io/docs/en/writing-running-appium/caps/
+https://adbshell.com/commands/adb-shell-pm-list-packages
+
+
+(1)JAVA
+java -version
+
+
+tester@tester-m:~$ sudo apt-get install default-jre
+tester@tester-m:~$ sudo apt-get install default-jdk
+tester@tester-m:~$
+
+tester@tester-m:~$ echo $JAVA_HOME
+
+tester@tester-m:~$ export PATH=${PATH}:${JAVA_HOME}/bin
+export PATH=${PATH}:${JAVA_HOME}/bin
+tester@tester-m:~$ echo $PATH
+
+java -version
+
+
+
+
+w pliku bashrc:
+# Appium - config
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=${PATH}:${JAVA_HOME}/bin
+
+export ANDROID_HOME=/home/tester/Android/Sdk
+export PATH=${PATH}:/home/tester/Android/Sdk/build-tools
+export PATH=${PATH}:/home/tester/Android/Sdk/tools
+export PATH=${PATH}:/home/tester/Android/Sdk/platform-tools
+
+
+(2) ANDROID STUDIO + ANDROID SDK
+pobieranie https://developer.android.com/studio
+instalacja https://developer.android.com/studio/install#linux
+
+Instalacja brakujących bibliotek dla systemu Linux Ubuntu:
+
+export ANDROID_HOME=/home/tester/Android/Sdk
+
+adb devices
+
+
+(3) NODE + NPM
+https://nodejs.org/en/
+
+node 12.16
+
+sciezka /usr/local/bin/
+
+KONTROLA:
+node -v
+which node  # wynik oczekiwany
+
+ścieżka - : /usr/local/bin/node
+npm -v
+
+
+
+https://askubuntu.com/questions/1152570/npm-cant-find-module-semver-error-in-ubuntu-19-04
+
+sudo cp -r /home/tester/Desktop/node-v12.16.1-linux-x64/lib/node_modules/ /usr/local/lib
+
+
+
+(4) Appium - pobieranie:
+appium dekstop: https://github.com/appium/appium-desktop/releases
+https://github.com/appium/appium-desktop/releases/download/v1.15.1/Appium-linux-1.15.1.AppImage
+
+
+API LEVELS https://developer.android.com/studio/releases/platforms
+
+(5) APPIUM - cd 
+https://medium.com/@syamsasi/setting-up-appium-on-windows-and-ubuntu-ea9a73ab989
+
+
+
+
+od KOLEŻANKI - ok maszyna:
+\\S13-S04\dobra_virtualka_bez_szyfru_tester
+
+adres od KONRADA:
+\\10.1.1.82\Kopia_dobra_wirtualka_tester
+\\s13-s22\Kopia_dobra_wirtualka_tester
+
+C:\Users\Student\VirtualBox VMs\ubuntutester2019
+
+- INSTALACJA APPIUM CIĄG DALSZY
+sudo npm install -g appium
+sudo npm install -g appium-doctor
+npm install -g appium --unsafe-perm=true --allow-root
+
+KONTROLA:
+appium-doctor --android
+nr wersji: appium-doctor --version
+
+
+(5) PYTHON + PYCHARM/IDE
+##### Fix pip3 #####  sudo apt-get remove python3-pip; sudo apt-get install python3-pip 
+python3 install pi
+pip3 install Appium-Python-Client
+
+wejdz do konsoli pythona:
+python3
+import selenium
+help (selenium)
+
+exit()
+
+Konfiguracja interpreterów pythona w pycharm 
+
+
+
+PIERWSZE TESTY w PY:
+
+# -*- coding: utf-8" -*
+
+
+import os
+import unittest
+from appium import webdriver
+from time import sleep
+
+PATH = lambda p: os.path.abspath(
+    os.path.join(os.path.dirname(__file__),p)
+)
+
+
+class TestowanieAplikacji(unittest.TestCase):
+    def setUp(self):
+        desired_caps = {}
+        desired_caps['platformName'] = 'Android'
+        desired_caps['platfomVersion'] = '7.0'
+        desired_caps['deviceName'] = 'Gigaset GS170'
+        desired_caps['app'] = PATH('ApiDemos-debug.apk')
+        desired_caps['appPackage'] = 'io.appium.android.apis'
+        desired_caps['appActivity'] = 'io.appium.android.apis.ApiDemos'
+
+
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub',desired_caps)
+
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_is_app1_installed(self):
+        self.assertTrue(self.driver.is_app_installed('io.appium.android.apis'))
+
+    def test_is_app2_installed(self):
+        self.assertTrue(self.driver.is_app_installed('com.example.android.contactmanager'))
+
+
+
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestowanieAplikacji)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+    
+    
+    
+    
+    
+    
+    
+AppPackage oraz AppActivity aplikacji odczytane zostanie w konsoli z wykorzystaniem:
+adb shell dumpsys window windows | grep -E 'mCurrentFocus'
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
