@@ -48,31 +48,6 @@ class TestowanieAplikacji(unittest.TestCase):
         self.driver.find_element_by_xpath("//android.widget.TextView[@text='Sample action']").click()
         sleep(5)
 
-        #
-        # elements = self.driver.find_elements_by_android_uiautomator("new UiSelector().checkable(true)")
-        # amount_of_elements = len(elements)
-        #
-        # is_checked_bool = False
-        # is_checked_value = self.driver.find_element_by_class_name("android.widget.CheckBox").get_attribute("checked")
-        #
-        # if is_checked_value == "false":
-        #     print("Checkbox nie jest zaznaczony")
-        #     self.driver.find_element_by_class_name("android.widget.CheckBox").click()
-        #     is_checked_bool = True
-        #
-        # self.assertTrue(is_checked_bool)
-        # sleep(3)
-        #
-        # self.driver.back()
-        # self.driver.find_element_by_accessibility_id('3. Preference dependencies').click()
-        #
-        # # czy checkbox jest zaznaczony ? jesli tak to nie zaznaczaj i daj wynik testu; OK ????
-        # is_checked_value = self.driver.find_element_by_class_name("android.widget.CheckBox").get_attribute("checked")
-        #
-        # if is_checked_value == "true":
-        #     print("Checkbox jest zaznaczony")
-        #     is_checked_bool = True
-
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestowanieAplikacji)
